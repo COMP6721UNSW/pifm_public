@@ -76,7 +76,14 @@ def pifm_initialise(template_name):
     UsageValidator(calling_module_path).validate()
 
     current_path = pathlib.Path(__file__).parent.resolve()
-    template_path = current_path/ "templates" / f"{template_name}.py"
+
+    env_template_folder = os.getenv("PIFM_TEMPLATES_FOLDER")
+    if env_template_folder:
+        template_folder = pathlib.Path(env_template_folder)
+    else:
+        template_folder = current_path / "templates"
+
+    template_path = template_folder / f"{template_name}.py"
     if not template_path.exists():
         print(f"pifm could not find the template {template_name}", file=sys.stderr)
         print(f"\tCheck your call to `pifm_initialise()`", file=sys.stderr)
